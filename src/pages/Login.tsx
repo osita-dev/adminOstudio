@@ -1,6 +1,6 @@
 import { useEffect, useState, type FormEvent } from "react";
 import { Navigate } from "react-router-dom";
-import { KeyRound, ShieldAlert, UserPlus } from "lucide-react";
+import { Eye, EyeOff, KeyRound, ShieldAlert, UserPlus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -21,6 +21,7 @@ const PASSWORD_MIN = 6; // Supabase's minimum password length.
 
 export default function Login() {
   const [mode, setMode] = useState<Mode>("signin");
+  const [showPassword, setShowPassword] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
@@ -45,6 +46,7 @@ export default function Login() {
     setError(null);
     setNotice(null);
     setPassword("");
+    setShowPassword(false);
   };
 
   const onSignIn = async () => {
@@ -192,21 +194,38 @@ export default function Login() {
 
           <div className="space-y-2">
             <Label htmlFor="password">Password</Label>
-            <Input
-              id="password"
-              type="password"
-              autoComplete={mode === "signin" ? "current-password" : "new-password"}
-              value={password}
-              onChange={(event) => setPassword(event.target.value)}
-              disabled={!isLoginReady || lockedSeconds > 0}
-              placeholder={
-                lockedSeconds > 0
-                  ? `Wait ${lockedSeconds}s…`
-                  : mode === "signup"
-                    ? `At least ${PASSWORD_MIN} characters`
-                    : "••••••••"
-              }
-            />
+            <div className="relative">
+              <Input
+                id="password"
+                type={showPassword ? "text" : "password"}
+                autoComplete={mode === "signin" ? "current-password" : "new-password"}
+                value={password}
+                onChange={(event) => setPassword(event.target.value)}
+                disabled={!isLoginReady || lockedSeconds > 0}
+                className="pr-10"
+                placeholder={
+                  lockedSeconds > 0
+                    ? `Wait ${lockedSeconds}s…`
+                    : mode === "signup"
+                      ? `At least ${PASSWORD_MIN} characters`
+                      : "••••••••"
+                }
+              />
+              <button
+                type="button"
+                onClick={() => setShowPassword((value) => !value)}
+                disabled={!isLoginReady || lockedSeconds > 0}
+                aria-label={showPassword ? "Hide password" : "Show password"}
+                title={showPassword ? "Hide password" : "Show password"}
+                className="absolute inset-y-0 right-0 flex w-10 items-center justify-center text-muted-foreground transition-colors hover:text-foreground disabled:cursor-not-allowed disabled:opacity-50"
+              >
+                {showPassword ? (
+                  <EyeOff size={16} aria-hidden />
+                ) : (
+                  <Eye size={16} aria-hidden />
+                )}
+              </button>
+            </div>
             {mode === "signup" && (
               <p className="text-[11px] text-muted-foreground">
                 Minimum {PASSWORD_MIN} characters.
