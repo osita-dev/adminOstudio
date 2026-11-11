@@ -10,7 +10,7 @@ import Bookings from "./pages/Bookings";
 
 // ============================================================
 // ROUTES (stage 12)
-//   /login          → password screen (redirects away if authed)
+//   /login          → sign in / sign up screen (redirects away if authed)
 //   /               → Dashboard        ┐
 //   /applications   → Applications     ├ behind AuthGuard
 //   /inquiries      → Inquiries        │  (stage 07: no data
